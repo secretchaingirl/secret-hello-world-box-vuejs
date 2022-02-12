@@ -1,13 +1,38 @@
 # List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
 tasks:
-  - name: Install Vue CLI
-    before: yarn global add @vue/cli
+  - name: Rust Toolchain
+    before: |
+      echo "Setting Rust toolchain"
+      rustup default stable
+      rustup target list --installed
+      rustup target add wasm32-unknown-unknown
+      rustup install nightly
+      rustup target add wasm32-unknown-unknown --toolchain nightly
+      echo "Install build essentials"
+      apt install build-essential
+      # echo "Compile"
+      # cargo wasm
+      # RUST_BACKTRACE=1 cargo unit-test
+      # cargo integration-test
+      # cargo schema
+
+  - name: Vue
+    before: |
+      echo "install Vue"
+      yarn global add @vue/cli
 
   - name: Dependencies and Dev Server
     init: |
       cd app
+      echo "install dependencies"
       yarn install 
-    command: yarn dev
+    command: |
+      yarn dev
+
+  - name: SecretDev Local Blockchain
+    command: |
+      echo "Starting secretdev local blockchain"
+      
 
 # List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
 ports:
