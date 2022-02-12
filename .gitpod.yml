@@ -9,7 +9,6 @@ tasks:
       rustup target list --installed
       rustup target add wasm32-unknown-unknown
       CARGO_HOME=/home/gitpod/.cargo rustup install nightly
-      rustup install nightly
       rustup target add wasm32-unknown-unknown --toolchain nightly
       echo "Install build essentials"
       sudo apt install build-essential
