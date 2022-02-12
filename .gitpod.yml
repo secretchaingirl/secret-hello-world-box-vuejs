@@ -1,17 +1,16 @@
 # List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
 tasks:
-  - before:
-    command: echo "Start secretdev local blockchain"
+  - name: Install Vue CLI
+    before:
+    command: yarn global add @vue/cli
+    onOpen: split-right
 
-  - init: 
-      yarn global add @vue/cli
+  - name: Dependencies and Dev Server
+    init: |
       cd app
       yarn install 
-
-  - name: Run Dev Server
-    command:
-      cd app
-      yarn dev
+    command: yarn dev
+    onOpen: split-right
 
 # List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
 ports:
