@@ -1,5 +1,9 @@
 # Base image
 FROM ubuntu:focal as runtime_base
+# Add Rust env
+FROM gitpod/workspace-rust
+# Add node and npm env
+FROM gitpod/workspace-node-lts
 
 LABEL maintainer=secretchaingirllabs
 
