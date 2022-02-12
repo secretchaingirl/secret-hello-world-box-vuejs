@@ -5,13 +5,14 @@ tasks:
       echo "Install Rustup"
       #curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
       echo "Setting Rust toolchain"
-      #rustup default stable
-      #rustup target list --installed
-      #rustup target add wasm32-unknown-unknown
-      #rustup install nightly
-      #rustup target add wasm32-unknown-unknown --toolchain nightly
-      #echo "Install build essentials"
-      #sudo apt install build-essential
+      rustup default stable
+      rustup target list --installed
+      rustup target add wasm32-unknown-unknown
+      CARGO_HOME=/home/gitpod/.cargo rustup install nightly
+      rustup install nightly
+      rustup target add wasm32-unknown-unknown --toolchain nightly
+      echo "Install build essentials"
+      sudo apt install build-essential
       # echo "Compile"
       # cargo wasm
       # RUST_BACKTRACE=1 cargo unit-test
