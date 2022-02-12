@@ -5,7 +5,7 @@ tasks:
   - name: Dev Server
     command: |
       echo "Start dev server"
-      cd app; npm run dev
+      cd app; pwd; npm run dev
   - name: New Terminal
     command: echo "New terminal window!"
 
