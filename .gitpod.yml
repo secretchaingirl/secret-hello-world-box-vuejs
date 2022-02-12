@@ -5,7 +5,6 @@ image:
 tasks:
   - init: cd app; npm install # runs during prebuild
     command: echo "Start dev server"; cd app; npm run dev
-    command: echo "secretdev local blockchain"
 
 # List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
 ports:
