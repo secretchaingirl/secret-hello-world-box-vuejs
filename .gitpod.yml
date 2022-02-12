@@ -8,6 +8,7 @@ tasks:
     command: |
       echo "Start dev server"
       cd app
+      sleep 5
       yarn dev
   - name: secretdev blockchain
     command: echo "Start secretdev local blockchain"
@@ -17,3 +18,4 @@ ports:
   - port: 3000
     onOpen: open-preview
 
+workspaceLocation: "./app"
