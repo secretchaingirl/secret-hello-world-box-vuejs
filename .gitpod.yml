@@ -1,32 +1,29 @@
 # List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
 tasks:
-  - name: Rust Toolchain
+  - name: Setup Env
     before: |
       echo "Install Rustup"
       #curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
       echo "Setting Rust toolchain"
-      rustup default stable
-      rustup target list --installed
-      rustup target add wasm32-unknown-unknown
+      #rustup default stable
+      #rustup target list --installed
+      #rustup target add wasm32-unknown-unknown
       CARGO_HOME=/home/gitpod/.cargo rustup install nightly
       rustup target add wasm32-unknown-unknown --toolchain nightly
-      echo "Install build essentials"
-      sudo apt install build-essential
+      #echo "Install build essentials"
+      #sudo apt install build-essential
       # echo "Compile"
       # cargo wasm
       # RUST_BACKTRACE=1 cargo unit-test
       # cargo integration-test
       # cargo schema
-
-  - name: Vue
-    before: |
-      echo "install Vue"
+      echo "Install Vue"
       yarn global add @vue/cli
 
   - name: Dependencies and Dev Server
     init: |
       cd app
-      echo "install dependencies"
+      echo "Install dependencies"
       yarn install 
     command: |
       yarn dev
