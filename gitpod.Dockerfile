@@ -1,11 +1,9 @@
 # Base image
-FROM ubuntu:focal as runtime_base
-# Add Rust env
-FROM gitpod/workspace-rust
-# Add node and npm env
-FROM gitpod/workspace-node-lts
+FROM gitpod/workspace-full:latest
 
 LABEL maintainer=secretchaingirllabs
+
+USER root
 
 # wasmi-sgx-test script requirements
 RUN apt-get update && \
@@ -25,5 +23,4 @@ RUN echo "source /etc/profile.d/bash_completion.sh" >> ~/.bashrc
 #    apt-get install -y nodejs npm
 
 
-# Install ca-certificates
-WORKDIR /root
+USER secretdev
