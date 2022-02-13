@@ -1,6 +1,6 @@
 # List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
 tasks:
-  - name: Setup Env
+  - name: Rust Toolchain
     before: |
       echo "Install Rustup"
       #curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -10,28 +10,36 @@ tasks:
       #rustup target add wasm32-unknown-unknown
       CARGO_HOME=/home/gitpod/.cargo rustup install nightly
       rustup target add wasm32-unknown-unknown --toolchain nightly
+      rustup default nightly
       #echo "Install build essentials"
       #sudo apt install build-essential
+      gp sync-done toolchain
       # echo "Compile"
       # cargo wasm
       # RUST_BACKTRACE=1 cargo unit-test
       # cargo integration-test
       # cargo schema
-      echo "Install Vue"
-      yarn global add @vue/cli
-
-  - name: Dependencies and Dev Server
-    init: |
-      cd app
-      echo "Install dependencies"
-      yarn install 
-    command: |
-      yarn dev
 
   - name: SecretDev Local Blockchain
+    init: gp sync-await toolchain
     command: |
       echo "Starting secretdev local blockchain"
       
+  - name: Install Vue
+    init: |
+      gp sync-await toolchain
+    command: |
+      echo "Install Vue"
+      yarn global add @vue/cli
+      gp sync-done vue
+
+  - name: Dependencies and Dev Server
+    init: gp sync-await vue
+    command: |
+      cd app
+      echo "Install dependencies"
+      yarn install 
+      yarn dev
 
 # List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
 ports:
