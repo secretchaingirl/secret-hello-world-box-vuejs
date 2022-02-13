@@ -11,23 +11,33 @@ tasks:
       CARGO_HOME=/home/gitpod/.cargo rustup install nightly
       rustup target add wasm32-unknown-unknown --toolchain nightly
       rustup default nightly
-      #echo "Install build essentials"
-      #sudo apt install build-essential
       gp sync-done toolchain
       # echo "Compile"
       # cargo wasm
       # RUST_BACKTRACE=1 cargo unit-test
-      # cargo integration-test
       # cargo schema
+      exit
 
   - name: SecretDev Local Blockchain
-    before: docker pull enigmampc/secret-network-sw-dev
+    before: |
+      docker pull enigmampc/secret-network-sw-dev
+      docker pull enigmampc/secret-contract-optimizer
     init: gp sync-await toolchain
     command: |
       echo "Starting secretdev local blockchain"
       docker run -it --rm -p 26657:26657 -p 26656:26656 -p 1337:1337 -v $(pwd):/root/code --name secretdev enigmampc/secret-network-sw-dev
+      gp sync-done secretdev
     openMode: split-right
 
+  - name: Compile and Deploy Secret Contract(s)
+    init: gp sync-await secretdev
+    command: |
+      echo "Compile secret contract"
+      cargo wasm
+      echo "Run unit tests"
+      RUST_BACKTRACE=1 cargo unit-test
+      gp sync-done secretcontract
+    openMode: split-right
       
   - name: Install Vue
     init: |
@@ -36,10 +46,13 @@ tasks:
       echo "Install Vue"
       yarn global add @vue/cli
       gp sync-done vue
+      exit
     openMode: split-right
 
   - name: Dependencies and Dev Server
-    init: gp sync-await vue
+    init: |
+      gp sync-await secretcontract
+      gp sync-await vue
     command: |
       cd app
       echo "Install dependencies"
