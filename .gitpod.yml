@@ -2,36 +2,27 @@
 tasks:
   - name: Rust Toolchain
     before: |
-      echo "Install Rustup"
-      #curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-      echo "Setting Rust toolchain"
-      #rustup default stable
-      #rustup target list --installed
-      #rustup target add wasm32-unknown-unknown
+      echo "Rust toolchain"
       CARGO_HOME=/home/gitpod/.cargo rustup install nightly
       rustup target add wasm32-unknown-unknown --toolchain nightly
       rustup default nightly
-      gp sync-done toolchain
-      # echo "Compile"
-      # cargo wasm
-      # RUST_BACKTRACE=1 cargo unit-test
-      # cargo schema
-      exit
+    init: gp sync-done toolchain
+    command: exit
 
   - name: Install Vue
-    init: |
-      gp sync-await toolchain
-    command: |
+    before: |
       echo "Install Vue"
       yarn global add @vue/cli
+    init: |
+      gp sync-await toolchain
       gp sync-done vue
-      exit
+    command: exit
     openMode: split-right
 
   - name: Compile and Run Unit Tests
     before: docker pull enigmampc/secret-contract-optimizer
-    init: gp sync-await toolchain
-    command: |
+    init: |
+      gp sync-await toolchain
       echo "Compile secret contract"
       cd contracts
       cargo wasm
@@ -58,8 +49,8 @@ tasks:
     openMode: split-right
 
   - name: Secret Contract Deploy and Instantiate
-    init: gp sync-await blockchain
     command: |
+      gp sync-await blockchain
       cd contracts
       echo "Deploy secret contract to local blockchain"
       docker exec -w /root/code -it secretdev scripts/deploy.sh
@@ -73,10 +64,9 @@ tasks:
     openMode: split-right
       
   - name: Dependencies and Dev Server
-    init: |
-      gp sync-await secretcontract
-      gp sync-await vue
+    init: gp sync-await vue
     command: |
+      gp sync-await secretcontract
       cd app
       echo "Install dependencies"
       yarn install 
