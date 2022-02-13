@@ -43,7 +43,6 @@ tasks:
         --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
         enigmampc/secret-contract-optimizer 
       gp sync-done compile
-      exit
     openMode: split-right
 
   - name: SecretDev Local Blockchain
@@ -63,10 +62,13 @@ tasks:
     command: |
       cd contracts
       echo "Deploy secret contract to local blockchain"
-      docker exec -it secretdev scripts/deploy.sh
+      docker exec -w /root/code -it secretdev scripts/deploy.sh
       echo "Instantiate secret contract"
-      docker exec -it secretdev scripts/instantiate.sh
+      docker exec -w /root/code -it secretdev scripts/instantiate.sh
+      echo "Get contract address"
+      docker exec -w /root/code -it secretdev secretd query compute list-contract-by-code 1
       gp sync-done secretcontract
+    openMode: split-right
       
   - name: Dependencies and Dev Server
     init: |
