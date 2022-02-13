@@ -34,6 +34,7 @@ tasks:
         --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
         enigmampc/secret-contract-optimizer 
       gp sync-done compile
+    command: exit
     openMode: split-right
 
   - name: SecretDev Local Blockchain
@@ -52,6 +53,7 @@ tasks:
     command: |
       gp sync-await blockchain
       cd contracts
+      sleep 3
       echo "Deploy secret contract to local blockchain"
       docker exec -w /root/code -it secretdev scripts/deploy.sh
       sleep 3
