@@ -63,8 +63,10 @@ tasks:
       cd contracts
       echo "Deploy secret contract to local blockchain"
       docker exec -w /root/code -it secretdev scripts/deploy.sh
+      sleep 3
       echo "Instantiate secret contract"
       docker exec -w /root/code -it secretdev scripts/instantiate.sh
+      sleep 3
       echo "Get contract address"
       docker exec -w /root/code -it secretdev secretd query compute list-contract-by-code 1
       gp sync-done secretcontract
