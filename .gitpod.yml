@@ -68,7 +68,7 @@ tasks:
       docker exec -w /root/code -it secretdev scripts/instantiate.sh
       sleep 3
       echo "Get contract address"
-      docker exec -w /root/code -it secretdev secretd query compute list-contract-by-code 1
+      docker exec -w /root/code -it secretdev scripts/get_address.sh
       gp sync-done secretcontract
     openMode: split-right
       
