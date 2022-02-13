@@ -5,29 +5,17 @@
     {
       "type": "object",
       "required": [
-        "increment"
+        "update"
       ],
       "properties": {
-        "increment": {
-          "type": "object"
-        }
-      }
-    },
-    {
-      "type": "object",
-      "required": [
-        "reset"
-      ],
-      "properties": {
-        "reset": {
+        "update": {
           "type": "object",
           "required": [
-            "count"
+            "motd"
           ],
           "properties": {
-            "count": {
-              "type": "integer",
-              "format": "int32"
+            "motd": {
+              "type": "string"
             }
           }
         }

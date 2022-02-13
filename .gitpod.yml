@@ -11,24 +11,13 @@ tasks:
       CARGO_HOME=/home/gitpod/.cargo rustup install nightly
       rustup target add wasm32-unknown-unknown --toolchain nightly
       rustup default nightly
-      #echo "Install build essentials"
-      #sudo apt install build-essential
       gp sync-done toolchain
       # echo "Compile"
       # cargo wasm
       # RUST_BACKTRACE=1 cargo unit-test
-      # cargo integration-test
       # cargo schema
+      exit
 
-  - name: SecretDev Local Blockchain
-    before: docker pull enigmampc/secret-network-sw-dev
-    init: gp sync-await toolchain
-    command: |
-      echo "Starting secretdev local blockchain"
-      docker run -it --rm -p 26657:26657 -p 26656:26656 -p 1337:1337 -v $(pwd):/root/code --name secretdev enigmampc/secret-network-sw-dev
-    openMode: split-right
-
-      
   - name: Install Vue
     init: |
       gp sync-await toolchain
@@ -36,10 +25,57 @@ tasks:
       echo "Install Vue"
       yarn global add @vue/cli
       gp sync-done vue
+      exit
     openMode: split-right
 
+  - name: Compile and Run Unit Tests
+    before: docker pull enigmampc/secret-contract-optimizer
+    init: gp sync-await toolchain
+    command: |
+      echo "Compile secret contract"
+      cd contracts
+      cargo wasm
+      echo "Run unit tests"
+      RUST_BACKTRACE=1 cargo unit-test
+      echo "Run contract optimizer"
+      docker run --rm -v "$(pwd)":/contract \
+        --mount type=volume,source="$(basename "$(pwd)")_cache",target=/code/target \
+        --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
+        enigmampc/secret-contract-optimizer 
+      gp sync-done compile
+    openMode: split-right
+
+  - name: SecretDev Local Blockchain
+    before: docker pull enigmampc/secret-network-sw-dev
+    init: gp sync-await compile
+    command: |
+      echo "Starting secretdev local blockchain"
+      cd contracts
+      docker run -it --rm -p 26657:26657 -p 26656:26656 -p 1337:1337 -v $(pwd):/root/code --name secretdev enigmampc/secret-network-sw-dev &
+      sleep 10
+      gp sync-done blockchain
+      docker container logs -f secretdev
+    openMode: split-right
+
+  - name: Secret Contract Deploy and Instantiate
+    init: gp sync-await blockchain
+    command: |
+      cd contracts
+      echo "Deploy secret contract to local blockchain"
+      docker exec -w /root/code -it secretdev scripts/deploy.sh
+      sleep 3
+      echo "Instantiate secret contract"
+      docker exec -w /root/code -it secretdev scripts/instantiate.sh
+      sleep 3
+      echo "Get contract address"
+      docker exec -w /root/code -it secretdev scripts/get_address.sh
+      gp sync-done secretcontract
+    openMode: split-right
+      
   - name: Dependencies and Dev Server
-    init: gp sync-await vue
+    init: |
+      gp sync-await secretcontract
+      gp sync-await vue
     command: |
       cd app
       echo "Install dependencies"
