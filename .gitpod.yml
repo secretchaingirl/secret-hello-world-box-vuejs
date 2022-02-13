@@ -21,9 +21,11 @@ tasks:
       # cargo schema
 
   - name: SecretDev Local Blockchain
+    before: docker pull enigmampc/secret-network-sw-dev
     init: gp sync-await toolchain
     command: |
       echo "Starting secretdev local blockchain"
+
       
   - name: Install Vue
     init: |
