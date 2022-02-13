@@ -34,7 +34,6 @@ tasks:
         --mount type=volume,source=registry_cache,target=/usr/local/cargo/registry \
         enigmampc/secret-contract-optimizer 
       gp sync-done compile
-    command: exit
     openMode: split-right
 
   - name: SecretDev Local Blockchain
