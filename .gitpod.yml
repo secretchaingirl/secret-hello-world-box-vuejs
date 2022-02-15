@@ -52,13 +52,13 @@ tasks:
     command: |
       gp sync-await blockchain
       cd contracts
-      sleep 3
+      sleep 5
       echo "Deploy secret contract to local blockchain"
       docker exec -w /root/code -it secretdev scripts/deploy.sh
-      sleep 3
+      sleep 5
       echo "Instantiate secret contract"
       docker exec -w /root/code -it secretdev scripts/instantiate.sh
-      sleep 3
+      sleep 5
       echo "Get contract address"
       docker exec -w /root/code -it secretdev scripts/get_address.sh
       gp sync-done secretcontract
