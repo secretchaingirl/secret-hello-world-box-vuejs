@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import { SecretNetworkClient } from "secretjs";
 
 import { SecretNetworkClient } from "secretjs";
 

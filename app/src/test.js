@@ -1,0 +1,2 @@
+import { SecretNetworkClient } from "secretjs";
+
