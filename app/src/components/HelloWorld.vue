@@ -11,6 +11,6 @@ defineProps<{ msg: string }>()
 
 <style scoped>
 h1 {
-	font-size: 150px;
+	font-size: 60px;
 }
 </style>
