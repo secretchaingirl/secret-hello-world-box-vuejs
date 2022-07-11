@@ -20,7 +20,7 @@ tasks:
     openMode: split-right
 
   - name: Compile and Run Unit Tests
-    before: docker pull enigmampc/secret-contract-optimizer
+    before: docker pull enigmampc/secret-contract-optimizer:latest
     init: |
       gp sync-await toolchain
       echo "Compile secret contract"
@@ -37,12 +37,12 @@ tasks:
     openMode: split-right
 
   - name: SecretDev Local Blockchain
-    before: docker pull enigmampc/secret-network-sw-dev
+    before: docker pull ghcr.io/scrtlabs/localsecret:latest
     init: gp sync-await compile
     command: |
       echo "Starting secretdev local blockchain"
       cd contracts
-      docker run -it --rm -p 26657:26657 -p 26656:26656 -p 1337:1337 -v $(pwd):/root/code --name secretdev enigmampc/secret-network-sw-dev &
+      docker run -it --rm -p 9091:9091 -p 26657:26657 -p 1317:1317 -p 5000:5000 -v $(pwd):/root/code --name localsecret ghcr.io/scrtlabs/localsecret
       sleep 10
       gp sync-done blockchain
       docker container logs -f secretdev
