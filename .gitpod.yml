@@ -42,7 +42,7 @@ tasks:
     command: |
       echo "Starting localsecret blockchain"
       cd contracts
-      docker run -it --rm -p 9091:9091 -p 26657:26657 -p 1317:1317 -p 5000:5000 -v $(pwd):/root/code --name localsecret ghcr.io/scrtlabs/localsecret \
+      docker run -it --rm -p 9091:9091 -p 26657:26657 -p 1317:1317 -p 5000:5000 -v $(pwd):/root/code --name localsecret ghcr.io/scrtlabs/localsecret &
       sleep 10
       gp sync-done blockchain
       docker container logs -f localsecret
